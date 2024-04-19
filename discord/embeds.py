@@ -373,8 +373,47 @@ class Embed:
             self._footer['icon_url'] = str(icon_url)
 
         return self
+    
+    def setFooter(self, *, text: Optional[Any] = None, iconUrl: Optional[Any] = None) -> Self:
+        """Sets the footer for the embed content.
+
+        This function returns the class instance to allow for fluent-style
+        chaining.
+
+        Parameters
+        -----------
+        text: :class:`str`
+            The footer text. Can only be up to 2048 characters.
+        icon_url: :class:`str`
+            The URL of the footer icon. Only HTTP(S) is supported.
+            Inline attachment URLs are also supported, see :ref:`local_image`.
+        """
+
+        self._footer = {}
+        if text is not None:
+            self._footer['text'] = str(text)
+
+        if iconUrl is not None:
+            self._footer['icon_url'] = str(iconUrl)
+
+        return self
 
     def remove_footer(self) -> Self:
+        """Clears embed's footer information.
+
+        This function returns the class instance to allow for fluent-style
+        chaining.
+
+        .. versionadded:: 2.0
+        """
+        try:
+            del self._footer
+        except AttributeError:
+            pass
+
+        return self
+    
+    def removeFooter(self) -> Self:
         """Clears embed's footer information.
 
         This function returns the class instance to allow for fluent-style
@@ -429,6 +468,31 @@ class Embed:
             }
 
         return self
+    
+    def setImage(self, *, url: Optional[Any]) -> Self:
+        """Sets the image for the embed content.
+
+        This function returns the class instance to allow for fluent-style
+        chaining.
+
+        Parameters
+        -----------
+        url: :class:`str`
+            The source URL for the image. Only HTTP(S) is supported.
+            Inline attachment URLs are also supported, see :ref:`local_image`.
+        """
+
+        if url is None:
+            try:
+                del self._image
+            except AttributeError:
+                pass
+        else:
+            self._image = {
+                'url': str(url),
+            }
+
+        return self
 
     @property
     def thumbnail(self) -> _EmbedMediaProxy:
@@ -447,6 +511,34 @@ class Embed:
         return EmbedProxy(getattr(self, '_thumbnail', {}))  # type: ignore
 
     def set_thumbnail(self, *, url: Optional[Any]) -> Self:
+        """Sets the thumbnail for the embed content.
+
+        This function returns the class instance to allow for fluent-style
+        chaining.
+
+        .. versionchanged:: 1.4
+            Passing ``None`` removes the thumbnail.
+
+        Parameters
+        -----------
+        url: :class:`str`
+            The source URL for the thumbnail. Only HTTP(S) is supported.
+            Inline attachment URLs are also supported, see :ref:`local_image`.
+        """
+
+        if url is None:
+            try:
+                del self._thumbnail
+            except AttributeError:
+                pass
+        else:
+            self._thumbnail = {
+                'url': str(url),
+            }
+
+        return self
+    
+    def setThumbnail(self, *, url: Optional[Any]) -> Self:
         """Sets the thumbnail for the embed content.
 
         This function returns the class instance to allow for fluent-style
@@ -539,8 +631,52 @@ class Embed:
             self._author['icon_url'] = str(icon_url)
 
         return self
+    
+    def setAuthor(self, *, name: Any, url: Optional[Any] = None, iconUrl: Optional[Any] = None) -> Self:
+        """Sets the author for the embed content.
+
+        This function returns the class instance to allow for fluent-style
+        chaining.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the author. Can only be up to 256 characters.
+        url: :class:`str`
+            The URL for the author.
+        icon_url: :class:`str`
+            The URL of the author icon. Only HTTP(S) is supported.
+            Inline attachment URLs are also supported, see :ref:`local_image`.
+        """
+
+        self._author = {
+            'name': str(name),
+        }
+
+        if url is not None:
+            self._author['url'] = str(url)
+
+        if iconUrl is not None:
+            self._author['icon_url'] = str(iconUrl)
+
+        return self
 
     def remove_author(self) -> Self:
+        """Clears embed's author information.
+
+        This function returns the class instance to allow for fluent-style
+        chaining.
+
+        .. versionadded:: 1.4
+        """
+        try:
+            del self._author
+        except AttributeError:
+            pass
+
+        return self
+    
+    def removeAuthor(self) -> Self:
         """Clears embed's author information.
 
         This function returns the class instance to allow for fluent-style
@@ -586,6 +722,64 @@ class Embed:
             'inline': inline,
             'name': str(name),
             'value': str(value),
+        }
+
+        try:
+            self._fields.append(field)
+        except AttributeError:
+            self._fields = [field]
+
+        return self
+    
+    def addField(self, *, name: Any, value: Any, inline: bool = True) -> Self:
+        """Adds a field to the embed object.
+
+        This function returns the class instance to allow for fluent-style
+        chaining. Can only be up to 25 fields.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the field. Can only be up to 256 characters.
+        value: :class:`str`
+            The value of the field. Can only be up to 1024 characters.
+        inline: :class:`bool`
+            Whether the field should be displayed inline.
+        """
+
+        field = {
+            'inline': inline,
+            'name': str(name),
+            'value': str(value),
+        }
+
+        try:
+            self._fields.append(field)
+        except AttributeError:
+            self._fields = [field]
+
+        return self
+    
+    def addInvisibleField(self) -> Self:
+        """Adds a field to the embed object.
+
+        This function returns the class instance to allow for fluent-style
+        chaining. Can only be up to 25 fields.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the field. Can only be up to 256 characters.
+        value: :class:`str`
+            The value of the field. Can only be up to 1024 characters.
+        inline: :class:`bool`
+            Whether the field should be displayed inline.
+        """
+
+        field = {
+            'inline': True,
+            'name': str(' '),
+            'value': str('\u200B'),
         }
 
         try:

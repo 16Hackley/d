@@ -763,8 +763,7 @@ class AudioPlayer(threading.Thread):
             delay = max(0, self.DELAY + (next_time - time.perf_counter()))
             time.sleep(delay)
 
-        if client.is_connected():
-            self.send_silence()
+        self.send_silence()
 
     def run(self) -> None:
         try:
