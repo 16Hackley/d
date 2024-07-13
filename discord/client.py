@@ -295,10 +295,6 @@ class Client:
         self._connection._get_websocket = self._get_websocket
         self._connection._get_client = lambda: self
 
-        if VoiceClient.warn_nacl:
-            VoiceClient.warn_nacl = False
-            _log.warning("PyNaCl is not installed, voice will NOT be supported")
-
     async def __aenter__(self) -> Self:
         await self._async_setup_hook()
         return self
@@ -608,7 +604,7 @@ class Client:
             passing status code.
         """
 
-        _log.info('logging in using static token')
+        _log.info('Logging in using static token.')
 
         if self.loop is _loop:
             await self._async_setup_hook()
